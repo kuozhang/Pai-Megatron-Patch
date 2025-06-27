@@ -53,6 +53,7 @@ SAVE_INTERVAL=${21}
 DATASET_PATH=${22}
 VALID_DATASET_PATH=${23}
 PRETRAIN_CHECKPOINT_PATH=${24}
+echo "PRETRAIN_CHECKPOINT_PATH: ${PRETRAIN_CHECKPOINT_PATH}"
 
 # the following two values will not be used when SFT is true
 TRAIN_TOKENS=${25}
@@ -436,8 +437,8 @@ mkdir -p ${TENSORBOARD_DIR}
 SAVED_PRETRAIN_CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 
 mkdir -p ${SAVED_PRETRAIN_CHECKPOINT_PATH}
-find -L ${PRETRAIN_CHECKPOINT_PATH} -maxdepth 1 -type f -name "*.json" -print0 | xargs -0 cp -t ${SAVED_PRETRAIN_CHECKPOINT_PATH}
-find -L ${PRETRAIN_CHECKPOINT_PATH} -maxdepth 1 -type f -name "merges.txt" -print0 | xargs -0 cp -t ${SAVED_PRETRAIN_CHECKPOINT_PATH}
+#find -L ${PRETRAIN_CHECKPOINT_PATH} -maxdepth 1 -type f -name "*.json" -print0 | xargs -0 cp -t ${SAVED_PRETRAIN_CHECKPOINT_PATH}
+#find -L ${PRETRAIN_CHECKPOINT_PATH} -maxdepth 1 -type f -name "merges.txt" -print0 | xargs -0 cp -t ${SAVED_PRETRAIN_CHECKPOINT_PATH}
 
 megatron_options="  \
         --save ${SAVED_PRETRAIN_CHECKPOINT_PATH} \
@@ -466,7 +467,7 @@ megatron_options="  \
         --log-interval 1 \
         --log-throughput \
         --eval-interval 10000 \
-        --eval-iters 10 \
+        --eval-iters 10000 \
         --save-interval ${SAVE_INTERVAL} \
         --tensorboard-queue-size 1 \
         --tensorboard-dir ${TENSORBOARD_DIR} \
@@ -492,7 +493,8 @@ megatron_options="  \
         --transformer-impl transformer_engine \
         --cross-entropy-loss-fusion \
         --qk-layernorm \
-        --kv-channels 128
+        --kv-channels 128 \
+        --tokenizer-model /workspace/models/qwen-ckpts/Qwen3-30B-A3B
         "
 
 #        --add-qkv-bias \ # no qkv bias
