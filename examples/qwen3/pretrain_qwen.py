@@ -131,7 +131,8 @@ def model_provider(pre_process=True, post_process=True) -> Union[GPTModel]:
             rope_scaling=args.use_rope_scaling,
             mtp_block_spec=mtp_block_spec,
         )
-
+    import autonvtx
+    autonvtx(model)
     return model
 
 if __name__ == "__main__":

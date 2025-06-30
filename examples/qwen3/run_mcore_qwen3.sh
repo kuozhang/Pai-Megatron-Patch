@@ -494,7 +494,11 @@ megatron_options="  \
         --cross-entropy-loss-fusion \
         --qk-layernorm \
         --kv-channels 128 \
-        --tokenizer-model /workspace/models/qwen-ckpts/Qwen3-30B-A3B
+        --tokenizer-model /workspace/models/qwen-ckpts/Qwen3-30B-A3B \
+	--moe-expert-capacity-factor "1.0" \
+        --moe-pad-expert-input-to-capacity \
+	--profile \
+	--profile-step-end 11
         "
 
 #        --add-qkv-bias \ # no qkv bias
@@ -502,7 +506,9 @@ megatron_options="  \
 #        --no-bias-swiglu-fusion \
 
 
-run_cmd="torchrun $DISTRIBUTED_ARGS pretrain_qwen.py
+nsys_command="nsys profile -s none -t nvtx,cuda -o /workspace/nsys_profile --force-overwrite true --capture-range=cudaProfilerApi --capture-range-end=stop "
+
+run_cmd="$nsys_command torchrun $DISTRIBUTED_ARGS pretrain_qwen.py
  ${megatron_options} ${dataset_options} ${pr_options} ${load_option} ${activation_checkpoint_options} \
  ${do_option} ${sp_option} ${moe_options} ${offload_option} ${sft_options} ${vp_option} ${packing_options} ${uneven_split_option} ${attn_backend_option} ${tie_option} ${gqa_options}"
 

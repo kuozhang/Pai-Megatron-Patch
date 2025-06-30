@@ -464,7 +464,8 @@ def build_tokenizer(args):
             def eos_token_id(self):
                 return self.tokenizer.eos_token_id
 
-        tokenizer = _DeepSeekV2Tokenizer(args.load, args.extra_vocab_size)
+        #tokenizer = _DeepSeekV2Tokenizer(args.load, args.extra_vocab_size)
+        tokenizer = _DeepSeekV2Tokenizer(args.tokenizer_model, args.extra_vocab_size)
         args.padded_vocab_size = tokenizer.vocab_size
 
     elif args.patch_tokenizer_type == 'QwenVLTokenizer':
